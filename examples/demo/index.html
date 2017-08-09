@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Jamstik Web Interface</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Jamstik"/>
+
+    <link rel="stylesheet" href="stylesheets/index.css">
+    <style type="text/css"></style>
+
+  </head>
+  <body>
+    <div class="content">
+      <h1>Jamstik SysEx Demo</h1>
+      <br>
+      <h3>Sending and receiving Jamstik SysEx commands</h3>
+      <br>
+      <p>
+        Click send next to the command you want to test on your jamstik.</p>
+      <p>
+        Open up the console on Chrome (Ctrl+Shift+I or Cmd+Shift+I) to see the response!
+      </p>
+      <p>
+        The object returned should be nearly identical to the one sent.
+      </p>
+      <br>
+      <br>
+      <p>
+        <button class="sendButton" id="send0">Send</button>
+        jamstik.serialize({transpose: 5});
+        <br>
+        <br>
+        <button class="sendButton" id="send1">Send</button>
+        jamstik.serialize({stringBend: true}));
+        <br>
+        <br>
+        <button class="sendButton" id="send2">Send</button>
+
+        jamstik.serialize({get: "tapMode"});
+        <br>
+        <br>
+        <button class="sendButton" id="send3">Send</button>
+        jamstik.serialize({string: {index: 5, value: 61}});
+        <br>
+        <br>
+        <button class="sendButton" id="send4">Send</button>
+        jamstik.serialize({get: "transpose"});
+        <br>
+        <br>
+        <button class="sendButton" id="send5">Send</button>
+        jamstik.serialize({string: {index: 1, value: "D5"}});
+        <br>
+        <br>
+        <button class="sendButton" id="send6">Send</button>
+        jamstik.serialize({string: {index: 3, value: "F#3"}});
+        <br>
+        <br>
+        <button class="sendButton" id="send7">Send</button>
+        jamstik.serialize({string: {index: 4, value: "Ab7"}});
+        <br>
+        <br>
+        <button class="sendButton" id="send8">Send</button>
+        jamstik.serialize({get: "batteryPercent"});
+        <br>
+        <br>
+        <button class="sendButton" id="send9">Send</button>
+        jamstik.serialize({get: "hardwareDeviceType"});
+        <br>
+        <br>
+        <button class="sendButton" id="send10">Send</button>
+        jamstik.serialize({dPad: {index: "up", value: "none"}});
+        <br>
+        <br>
+        <button class="sendButton" id="send11">Send</button>
+        jamstik.serialize({tapMode: true});
+        <br>
+        <br>
+        <button class="sendButton" id="send12">Send</button>
+        jamstik.serialize({dPad: {index: "mute", value: "mute"}});
+        <br>
+        <br>
+        <button class="sendButton" id="send13">Send</button>
+        jamstik.serialize({dPad: {index: "enter", value: "capoUp"}});
+        <br>
+        <br>
+      </p>
+
+
+
+    </div>
+
+
+    <script src="../../dist/jamstik.js"></script>
+    <script src="build/midi.js"></script>
+    <script src="build/main.js"></script>
+
+  </body>
+</html>

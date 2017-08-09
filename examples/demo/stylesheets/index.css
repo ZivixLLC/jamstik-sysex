@@ -1,0 +1,31 @@
+.content {
+    margin-left: 25%;
+    margin-right: auto;
+    font-size: 120%;
+}
+.sendButton {
+  background: #012238;
+  background-image: -webkit-linear-gradient(top, #012238, #000000);
+  background-image: -moz-linear-gradient(top, #012238, #000000);
+  background-image: -ms-linear-gradient(top, #012238, #000000);
+  background-image: -o-linear-gradient(top, #012238, #000000);
+  background-image: linear-gradient(to bottom, #012238, #000000);
+  -webkit-border-radius: 11;
+  -moz-border-radius: 11;
+  border-radius: 11px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.sendButton:hover {
+  background: #1d2f59;
+  background-image: -webkit-linear-gradient(top, #1d2f59, #000000);
+  background-image: -moz-linear-gradient(top, #1d2f59, #000000);
+  background-image: -ms-linear-gradient(top, #1d2f59, #000000);
+  background-image: -o-linear-gradient(top, #1d2f59, #000000);
+  background-image: linear-gradient(to bottom, #1d2f59, #000000);
+  text-decoration: none;
+}
