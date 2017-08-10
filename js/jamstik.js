@@ -250,6 +250,7 @@ const systemNameR = {
   FWREVMAJ: "firmwareRevisionMajor",
   FWREVMIN: "firmwareRevisionMinor",
   LEFT_BLE: "leftHanded",
+  TUTOR_MD: "tutorMode",
 
   HW__CAPS: "hardwareCapabilityFlags",
   BATT_PCT: "batteryPercent",
@@ -434,6 +435,7 @@ const ttOfVar = {
   FWREVMAJ: "stt8bitByte",
   FWREVMIN: "stt8bitByte",
   LEFT_BLE: "stt7bitByte",
+  TUTOR_MD: "stt7bitByte",
 
   HW__CAPS: "stt8bitByte",
   BATT_PCT: "sttUInt16",
@@ -537,6 +539,7 @@ let recommendedVarUse = {
   S5__NOTE: "textBox",
   PICKPROF: "textBox",
   LEFT_BLE: "switch",
+  TUTOR_MD: "switch",
 
   S0_MIDPT:"textBox",//need to verify
   S0ENVTRG:"textBox",
@@ -996,6 +999,12 @@ export const jamstik = {
     let sysexEnd = 0xF7;
 
 
+    if (key == "get" && value == "allConfig") {
+      return ([0xF0,0x0,0x2,0x2,0x66,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xF,0xF7]);
+    }
+
+
+
     switch (typeof value) {
     case 'boolean':
     case 'number':
@@ -1023,22 +1032,22 @@ export const jamstik = {
           valueValue1 = Object.values(value)[0];
           valueValue2 = Object.values(value)[1];
           switch (valueValue1) {
-          case 0:
+          case 6:
             key = "openNote6th";
             break;
-          case 1:
+          case 5:
             key = "openNote5th";
             break;
-          case 2:
+          case 4:
             key = "openNote4th";
             break;
           case 3:
             key = "openNote3rd";
             break;
-          case 4:
+          case 2:
             key = "openNote2nd";
             break;
-          case 5:
+          case 1:
             key = "openNote1st";
             break;
           }
@@ -1155,7 +1164,6 @@ export const jamstik = {
                                             command[6],
                                             command[7]);
     let variablePart = message.slice(beginVar,message.length-2);
-
 
     switch (cf[message[0]]) {
     case "SYSEX_GET_CONFIG_SCHEMA":

@@ -60,3 +60,5 @@ typings/
 node_modules/
 
 examples/demo/node_modules
+
+dist/package.json

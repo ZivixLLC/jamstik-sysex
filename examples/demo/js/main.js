@@ -20,12 +20,19 @@ let demoCommands = [
   {dPad: {index: "up", value: "none"}},
   {tapMode: true},
   {dPad: {index: "mute", value: "mute"}},
-  {dPad: {index: "enter", value: "capoUp"}}
+  {dPad: {index: "enter", value: "capoUp"}},
+  {leftHanded: true},
+  {resetDefaults: 2},
+  {get: "allConfig"}
 ];
 
 
 function sendTextBox(index) {
   sendMIDI(jamstik.serialize(demoCommands[index]));
+}
+
+function sendTextBoxx() {
+  sendMIDI([0xF0,0x0,0x2,0x2,0x66,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xF,0xF7]);
 }
 
 
@@ -43,3 +50,7 @@ document.querySelector("#send10").addEventListener("click", function() {sendText
 document.querySelector("#send11").addEventListener("click", function() {sendTextBox(11);});
 document.querySelector("#send12").addEventListener("click", function() {sendTextBox(12);});
 document.querySelector("#send13").addEventListener("click", function() {sendTextBox(13);});
+document.querySelector("#send14").addEventListener("click", function() {sendTextBox(14);});
+document.querySelector("#send15").addEventListener("click", function() {sendTextBox(15);});
+document.querySelector("#send16").addEventListener("click", function() {sendTextBox(16);});
+document.querySelector("#send17").addEventListener("click", function() {sendTextBoxx();});
