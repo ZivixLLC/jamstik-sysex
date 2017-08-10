@@ -71,6 +71,18 @@ jamstik.deserialize([0xF0,0x0,0x2,0x2,0x62,0x54,0x52,0x41,0x4E,0x53,0x50,0x53,0x
 
 ## Useful Parameters to Change
 
+##### Reset to Defaults
+```javascript
+//Will shut off the Jamstik. Make sure to power back on
+{resetDefaults: 2}
+```
+
+##### Get All Settings
+```javascript
+//Responds with a barrage of all parameters' values
+{get: allConfig}
+```
+
 ##### Transpose
 ```javascript
 {transpose: 0}
@@ -85,6 +97,12 @@ jamstik.deserialize([0xF0,0x0,0x2,0x2,0x62,0x54,0x52,0x41,0x4E,0x53,0x50,0x53,0x
 {tapMode: false}
 ```
 
+##### Tutor Mode
+```javascript
+//Disables directional pad, and puts the Jamstik in a state designed for the beginner
+{tutorMode: true}
+```
+
 ##### String Hold Time
 ```javascript
 {stringHoldTime: 8} //in seconds
@@ -95,6 +113,11 @@ jamstik.deserialize([0xF0,0x0,0x2,0x2,0x62,0x54,0x52,0x41,0x4E,0x53,0x50,0x53,0x
 {hammerOns: true}
 {hammerOnTimer: 25}  //x 10ms
 {hammerOnVelocity: 64}
+```
+
+##### Left-handed Mode
+```javascript
+{leftHanded: true}
 ```
 
 ##### Accelerometer
@@ -143,22 +166,22 @@ panic
 | --- | --- |
 | sleepTime | 0-127 |
 | singleMidiChannelMode | boolean |
-| midiChannelOf1stString | 0-127 |
+| midiChannelOf1stString | 1-16 |
 | minimumMidiVelocity | 0-127 |
 | maximumMidiVelocity | 0-127 |
 | noMidiVelocity | boolean |
 | accelerometerController | 0-127 |
 | accelerometerThresholdTo | 0-127 |
 | accelerometer | boolean |
-| accelerometerPitchAngle | 0-127 |
-| accelerometerPitchAngle2 | 0-127 |
-| stringHoldTime | 0-127 |
+| accelerometerPitchAngle | -90 to 90 |
+| accelerometerPitchAngle2 | -90 to 90 |
+| stringHoldTime | 0-20 |
 | volumeCurve | boolean |
 | logVolumeCurveFlattening | boolean |
 | sustainMode | boolean |
 | stringBend | boolean |
 | hammerOns | boolean |
-| hammerOnTimer | 0-127 |
+| hammerOnTimer | 0-255 |
 | hammerOnVelocity | 0-127 |
 | tapMode | boolean |
 | transpose | -24 to 24 |
@@ -174,10 +197,11 @@ panic
 | firmwareRevisionMajor | retrieve only |
 | firmwareRevisionMinor | retrieve only |
 | leftHanded | boolean |
+| tutorMode | boolean |
 | 
 | hardwareCapabilityFlags |  |
 | batteryPercent | retrieve only |
-| resetDefaults | ???? |
+| resetDefaults | 0-4 |
 | 
 | midpointX | 0-127 |
 | triggerEnvMaxX | 0-127 |
