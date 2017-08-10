@@ -21,6 +21,8 @@ navigator.requestMIDIAccess({sysex: true}).then(onMIDISuccess, onMIDIFailure);
 
 There are two main functions you'll be working with: ```serialize()``` and ```deserialize()```.
 
+#### Serialize
+
 ```javascript
 jamstik.serialize({key: value});
 ```
@@ -53,6 +55,7 @@ jamstik.serialize({string: {index: 5, value: 'E4'}});
 jamstik.serialize({string: {index: 5, value: 52}});
 ```
 
+#### Deserialize
 
 ```javascript
 jamstik.deserialize(rawMIDISysexData);
