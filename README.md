@@ -203,7 +203,7 @@ panic
 | batteryPercent | retrieve only |
 | resetDefaults | 0-4 |
 | 
-| midpointX | 0-127 |
+| midpointX (string num) | 0-127 |
 | triggerEnvMaxX | 0-127 |
 |  volumeEnvMaxX | 0-127 |
 | triggerX | 0-127 |
