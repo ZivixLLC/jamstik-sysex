@@ -1,1 +1,191 @@
-# jamstik-sysex
+# Jamstik SysEx Javascript API
+
+Use this simple API to serialize and deserialize special MIDI messages to be recognized by the Jamstik.
+
+Coupled with [Web MIDI API](https://webaudio.github.io/web-midi-api/), you can create software which changes the exclusive parameters in the Jamstik, like tuning or D-pad functionality.
+
+## Installation
+
+Place ```dist/jamstik.js``` in your project directory or download through ```npm```
+
+```bash
+npm install jamstik-sysex
+```
+## Usage
+
+If using Web MIDI API, you must set ```sysex: true``` when requesting access.
+
+```javascript
+navigator.requestMIDIAccess({sysex: true}).then(onMIDISuccess, onMIDIFailure);
+```
+
+There are two main functions you'll be working with: ```serialize()``` and ```deserialize()```.
+
+#### Serialize
+
+```javascript
+jamstik.serialize({key: value});
+```
+```serialize()``` returns an array of numbers that when sent to the Jamstik will be handled appropriately.  The sending can be done through Web MIDI API's ```send()```.  Check ```examples/demo/js/midi.js``` and open ```examples/demo/index.html``` for a simple example of sending messages to the first found MIDI device (assuming it's a Jamstik!).
+
+
+```javascript
+//Set the transpose to 5 halfsteps
+jamstik.serialize({transpose: 5});
+//Returns [0xF0,0x0,0x2,0x2,0x62,0x54,0x52,0x41,0x4E,0x53,0x50,0x53,0x45,0x6,0x0,0x1,0x20,0x10,0xF7]
+
+//Strumming is not required with tapMode to trigger note ons
+jamstik.serialize({tapMode: true});
+
+//Retrieve the current transposition
+jamstik.serialize({get: transpose});
+
+//Retrieve current battery percentage
+jamstik.serialize({get: batteryPercent});
+
+//Set Jamstik to standard tuning (EADGBe)
+jamstik.serialize({string: {index: 0, value: 'E2'}});
+jamstik.serialize({string: {index: 1, value: 'A2'}});
+jamstik.serialize({string: {index: 2, value: 'D3'}});
+jamstik.serialize({string: {index: 3, value: 'G3'}});
+jamstik.serialize({string: {index: 4, value: 'B3'}});
+jamstik.serialize({string: {index: 5, value: 'E4'}});
+
+//Note number is also supported
+jamstik.serialize({string: {index: 5, value: 52}});
+```
+
+#### Deserialize
+
+```javascript
+jamstik.deserialize(rawMIDISysexData);
+```
+
+```deserialize()``` returns an object similar to the object you passed in with ```serialize()```.  In fact, every time you send a message to the Jamstik, you should get a receive in return confirming the value has been changed. With this, you can design interfaces updated on receives, not sends. Certain events, like pressing buttons on the directional pad, do not require a sent command, and the Jamstik will send a message letting us know what has been changed.
+
+```javascript
+//Let's figure out what the Jamstik sent us!
+jamstik.deserialize([0xF0,0x0,0x2,0x2,0x62,0x54,0x52,0x41,0x4E,0x53,0x50,0x53,0x45,0x6,0x0,0x1,0x20,0x10,0xF7]);
+//Returns {transpose: 5}
+```
+
+## Useful Parameters to Change
+
+##### Transpose
+```javascript
+{transpose: 0}
+```
+
+##### Tuning
+```javascript
+{string: {index: 5, value: 'E4'}}
+```
+##### Tap Mode
+```javascript
+{tapMode: false}
+```
+
+##### String Hold Time
+```javascript
+{stringHoldTime: 8} //in seconds
+```
+
+##### Hammer Ons
+```javascript
+{hammerOns: true}
+{hammerOnTimer: 25}  //x 10ms
+{hammerOnVelocity: 64}
+```
+
+##### Accelerometer
+```javascript
+{accelerometer: false}
+```
+##### Single MIDI Channel Mode
+```javascript
+{singleMidiChannelMode: false}
+```
+
+### D-Pad Functionality
+```javascript
+{dPad: {index: indexName, value: valueName}}
+```
+
+There are 6 programmable buttons on the jamstik.  Their index names are as follows:
+```
+up
+down
+left
+right
+enter
+mute
+```
+
+And the value names are:
+```
+none
+capoUp
+capoDown
+octaveUp
+octaveDown
+capoReset
+stringBend
+mute
+tapMode
+tapModeMomentary
+singleMultiChannelToggle
+modulationToggle
+panic
+```
+
+## All Other Commands
+| Parameter | Valid Input |
+| --- | --- |
+| sleepTime | 0-127 |
+| singleMidiChannelMode | boolean |
+| midiChannelOf1stString | 0-127 |
+| minimumMidiVelocity | 0-127 |
+| maximumMidiVelocity | 0-127 |
+| noMidiVelocity | boolean |
+| accelerometerController | 0-127 |
+| accelerometerThresholdTo | 0-127 |
+| accelerometer | boolean |
+| accelerometerPitchAngle | 0-127 |
+| accelerometerPitchAngle2 | 0-127 |
+| stringHoldTime | 0-127 |
+| volumeCurve | boolean |
+| logVolumeCurveFlattening | boolean |
+| sustainMode | boolean |
+| stringBend | boolean |
+| hammerOns | boolean |
+| hammerOnTimer | 0-127 |
+| hammerOnVelocity | 0-127 |
+| tapMode | boolean |
+| transpose | -24 to 24 |
+| openNote6th | 0-127 |
+| openNote5th | 0-127 |
+| openNote4th | 0-127 |
+| openNote3rd | 0-127 |
+| openNote2nd | 0-127 |
+| openNote1st |0-127  |
+| pickingProfile | 0-127 |
+| hardwareDeviceType | retrieve only |
+| hardwareDeviceVersion | retrieve only |
+| firmwareRevisionMajor | retrieve only |
+| firmwareRevisionMinor | retrieve only |
+| leftHanded | boolean |
+| 
+| hardwareCapabilityFlags |  |
+| batteryPercent | retrieve only |
+| resetDefaults | ???? |
+| 
+| midpointX | 0-127 |
+| triggerEnvMaxX | 0-127 |
+|  volumeEnvMaxX | 0-127 |
+| triggerX | 0-127 |
+| volumeBoostX | 0-127 |
+| factoryVolumeBoostX | 0-127 |
+| minStringTriggerTimeX | 0-127 |
+| betaX | 0-127 |
+| gammaX | 0-127 |
+| deltaX | 0-127 |
