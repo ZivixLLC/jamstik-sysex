@@ -1032,22 +1032,22 @@ export const jamstik = {
           valueValue1 = Object.values(value)[0];
           valueValue2 = Object.values(value)[1];
           switch (valueValue1) {
-          case 6:
+          case 1:
             key = "openNote6th";
             break;
-          case 5:
+          case 2:
             key = "openNote5th";
             break;
-          case 4:
+          case 3:
             key = "openNote4th";
             break;
-          case 3:
+          case 4:
             key = "openNote3rd";
             break;
-          case 2:
+          case 5:
             key = "openNote2nd";
             break;
-          case 1:
+          case 6:
             key = "openNote1st";
             break;
           }
@@ -1184,7 +1184,7 @@ export const jamstik = {
           command[5] == 0x4F &&
           command[6] == 0x54 &&
           command[7] == 0x45) {
-        finalMessage["string"]={index:-48+parseInt(command[1]), value: convert(variablePart,ttOfVar[joinedCommand])};
+        finalMessage["string"]={index:-47-parseInt(command[1])*-1, value: convert(variablePart,ttOfVar[joinedCommand])};
         return(finalMessage);
       } else if (command[0] == 68 &&
                  command[1] == 80 &&

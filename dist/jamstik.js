@@ -967,22 +967,22 @@
               valueValue1 = Object.values(value)[0];
               valueValue2 = Object.values(value)[1];
               switch (valueValue1) {
-                case 6:
+                case 1:
                   key = "openNote6th";
                   break;
-                case 5:
+                case 2:
                   key = "openNote5th";
                   break;
-                case 4:
+                case 3:
                   key = "openNote4th";
                   break;
-                case 3:
+                case 4:
                   key = "openNote3rd";
                   break;
-                case 2:
+                case 5:
                   key = "openNote2nd";
                   break;
-                case 1:
+                case 6:
                   key = "openNote1st";
                   break;
               }
@@ -1087,7 +1087,7 @@
         case "SYSEX_ACK_LIST_CATEGORIES":
           //special string tuning by index
           if (command[0] == 0x53 && command[2] == 0x5F && command[3] == 0x5F && command[4] == 0x4E && command[5] == 0x4F && command[6] == 0x54 && command[7] == 0x45) {
-            finalMessage["string"] = { index: -48 + parseInt(command[1]), value: convert(variablePart, ttOfVar[joinedCommand]) };
+            finalMessage["string"] = { index: -47 - parseInt(command[1]) * -1, value: convert(variablePart, ttOfVar[joinedCommand]) };
             return finalMessage;
           } else if (command[0] == 68 && command[1] == 80 && command[2] == 65 && command[3] == 68 && command[4] == 79 && command[5] == 80) {
             finalMessage["dPad"] = whichDPadAndTypeOfDPadAssignment(variablePart);

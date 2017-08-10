@@ -44,15 +44,15 @@ jamstik.serialize({get: transpose});
 jamstik.serialize({get: batteryPercent});
 
 //Set Jamstik to standard tuning (EADGBe)
-jamstik.serialize({string: {index: 0, value: 'E2'}});
-jamstik.serialize({string: {index: 1, value: 'A2'}});
-jamstik.serialize({string: {index: 2, value: 'D3'}});
-jamstik.serialize({string: {index: 3, value: 'G3'}});
-jamstik.serialize({string: {index: 4, value: 'B3'}});
-jamstik.serialize({string: {index: 5, value: 'E4'}});
+jamstik.serialize({string: {index: 1, value: 'E2'}});
+jamstik.serialize({string: {index: 2, value: 'A2'}});
+jamstik.serialize({string: {index: 3, value: 'D3'}});
+jamstik.serialize({string: {index: 4, value: 'G3'}});
+jamstik.serialize({string: {index: 5, value: 'B3'}});
+jamstik.serialize({string: {index: 6, value: 'E4'}});
 
 //Note number is also supported
-jamstik.serialize({string: {index: 5, value: 52}});
+jamstik.serialize({string: {index: 1, value: 52}});
 ```
 
 #### Deserialize
