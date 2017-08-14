@@ -1,10 +1,10 @@
 
-License Summary
+## License Summary
 
-    License does not expire.
-    Can be used for creating unlimited applications
-    Can be distributed in binary or object form only
-    Commercial use allowed under the following conditions :
+    ⋅⋅* License does not expire.
+    ⋅⋅* Can be used for creating unlimited applications
+    ⋅⋅* Can be distributed in binary or object form only
+    ⋅⋅* Commercial use allowed under the following conditions :
 
     The API is free for non-commercial use.  For commercial use please contact Zivix.
     Cannot modify source-code for any purpose (cannot create derivative works)
