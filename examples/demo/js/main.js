@@ -1,5 +1,6 @@
 //jamstik.init();
-import {jamstik} from '/dist/jamstik';
+import {serialize} from '/dist/jamstik';
+import {deserialize} from '/dist/jamstik';
 import {initializeMIDI} from './midi';
 import {sendMIDI} from './midi';
 

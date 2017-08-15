@@ -19,6 +19,13 @@ If using Web MIDI API, you must set ```sysex: true``` when requesting access.
 navigator.requestMIDIAccess({sysex: true}).then(onMIDISuccess, onMIDIFailure);
 ```
 
+With ES6 syntax, you can import the two functions.
+
+```javascript
+import {serialize} from '/path/to/jamstik';
+import {deserialize} from '/path/to/jamstik';
+```
+
 There are two main functions you'll be working with: ```serialize()``` and ```deserialize()```.
 
 #### Serialize

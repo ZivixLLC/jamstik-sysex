@@ -13,13 +13,13 @@
 })(this, function (_jamstik, _midi) {
   'use strict';
 
-  (0, _midi.initializeMIDI)(); //jamstik.init();
-
+  //jamstik.init();
+  (0, _midi.initializeMIDI)();
 
   let demoCommands = [{ transpose: 5 }, { stringBend: true }, { get: "tapMode" }, { string: { index: 5, value: 61 } }, { get: "transpose" }, { string: { index: 1, value: "D5" } }, { string: { index: 3, value: "F#3" } }, { string: { index: 4, value: "Ab7" } }, { get: "batteryPercent" }, { get: "hardwareDeviceType" }, { dPad: { index: "up", value: "none" } }, { tapMode: true }, { dPad: { index: "mute", value: "mute" } }, { dPad: { index: "enter", value: "capoUp" } }, { leftHanded: true }, { resetDefaults: 2 }, { get: "allConfig" }];
 
   function sendTextBox(index) {
-    (0, _midi.sendMIDI)(_jamstik.jamstik.serialize(demoCommands[index]));
+    (0, _midi.sendMIDI)(jamstik.serialize(demoCommands[index]));
   }
 
   function sendTextBoxx() {

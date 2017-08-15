@@ -1,8 +1,8 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", "/dist/jamstik"], factory);
+    define(['exports', '/dist/jamstik'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("/dist/jamstik"));
+    factory(exports, require('/dist/jamstik'));
   } else {
     var mod = {
       exports: {}
@@ -11,7 +11,7 @@
     global.midi = mod.exports;
   }
 })(this, function (exports, _jamstik) {
-  "use strict";
+  'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -21,12 +21,12 @@
 
 
   //midi object
-  let midi;
-  //midi object's port
   /*
     midi.js
   */
 
+  let midi;
+  //midi object's port
   let mPort;
   function initializeMIDI() {
     console.log("Initializing MIDI");
@@ -53,7 +53,7 @@
     if (data.length == 3) {
       console.log("Standard MIDI data: ", data);
     } else if (data.length > 3) {
-      console.log("Received SysEx MIDI Message: ", _jamstik.jamstik.deserialize(data));
+      console.log("Received SysEx MIDI Message: ", jamstik.deserialize(data));
     }
   }
 

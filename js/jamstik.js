@@ -963,140 +963,169 @@ function convertNote(note) {
 }
 
 
-export const jamstik = {
 
-  serialize: function(initialMessage) {
+export function serialize(initialMessage) {
 
 
-    if (typeof initialMessage != "object") {
-      throw ("serialize(): argument must be of type object.");
+  if (typeof initialMessage != "object") {
+    throw ("serialize(): argument must be of type object.");
+  }
+  if (arguments.length > 1) {
+    throw ("serialize(): must contain only one argument of type object.");
+  }
+
+  let key = Object.keys(initialMessage)[0];
+  let value = Object.values(initialMessage)[0];
+
+  //throw ("serialize(): Invalid key in object \""+key+"\".");
+
+  let valueKey1;
+  let valueValue1;
+  let valueKey2;
+  let valueValue2;
+
+  let transferTypeOfVar;
+
+  let command;
+  let commandSpecific;
+  let finalMessage = [];
+  let finalMessageSize;
+  let variables;
+
+  //hard coded values
+  let sysexStart = [0xF0, 0x0];
+  let jsVendorID = [0x2,0x2];
+  let sysexEnd = 0xF7;
+
+
+  if (key == "get" && value == "allConfig") {
+    return ([0xF0,0x0,0x2,0x2,0x66,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xF,0xF7]);
+  }
+
+
+
+  switch (typeof value) {
+  case 'boolean':
+  case 'number':
+    if (ttOfVar.hasOwnProperty(systemName[key])) {
+      transferTypeOfVar = ttOfVar[systemName[key]];
+      variables = convert(Number(value),"num",transferTypeOfVar);
+    } else {
+      throw("serialize(): invalid value " + value + " in object pair.");
     }
-    if (arguments.length > 1) {
-      throw ("serialize(): must contain only one argument of type object.");
+    break;
+  case 'string':
+    if (key != "get") {
+      //put in conversions for like 'D5' and stuff
+      value = convertNote(value);
+
+    } else {
+
     }
-
-    let key = Object.keys(initialMessage)[0];
-    let value = Object.values(initialMessage)[0];
-
-    //throw ("serialize(): Invalid key in object \""+key+"\".");
-
-    let valueKey1;
-    let valueValue1;
-    let valueKey2;
-    let valueValue2;
-
-    let transferTypeOfVar;
-
-    let command;
-    let commandSpecific;
-    let finalMessage = [];
-    let finalMessageSize;
-    let variables;
-
-    //hard coded values
-    let sysexStart = [0xF0, 0x0];
-    let jsVendorID = [0x2,0x2];
-    let sysexEnd = 0xF7;
-
-
-    if (key == "get" && value == "allConfig") {
-      return ([0xF0,0x0,0x2,0x2,0x66,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xF,0xF7]);
-    }
-
-
-
-    switch (typeof value) {
-    case 'boolean':
-    case 'number':
-      if (ttOfVar.hasOwnProperty(systemName[key])) {
+    break;
+  case 'object':
+    if (Object.keys(value).length == 2 && key == "string") {
+      valueKey1 = Object.keys(value)[0];
+      valueKey2 = Object.keys(value)[1];
+      if (valueKey1 == "index" && valueKey2 == "value") {
+        valueValue1 = Object.values(value)[0];
+        valueValue2 = Object.values(value)[1];
+        switch (valueValue1) {
+        case 1:
+          key = "openNote6th";
+          break;
+        case 2:
+          key = "openNote5th";
+          break;
+        case 3:
+          key = "openNote4th";
+          break;
+        case 4:
+          key = "openNote3rd";
+          break;
+        case 5:
+          key = "openNote2nd";
+          break;
+        case 6:
+          key = "openNote1st";
+          break;
+        }
         transferTypeOfVar = ttOfVar[systemName[key]];
-        variables = convert(Number(value),"num",transferTypeOfVar);
-      } else {
-        throw("serialize(): invalid value " + value + " in object pair.");
-      }
-      break;
-    case 'string':
-      if (key != "get") {
-        //put in conversions for like 'D5' and stuff
-        value = convertNote(value);
-
-      } else {
-
-      }
-      break;
-    case 'object':
-      if (Object.keys(value).length == 2 && key == "string") {
-        valueKey1 = Object.keys(value)[0];
-        valueKey2 = Object.keys(value)[1];
-        if (valueKey1 == "index" && valueKey2 == "value") {
-          valueValue1 = Object.values(value)[0];
-          valueValue2 = Object.values(value)[1];
-          switch (valueValue1) {
-          case 1:
-            key = "openNote6th";
-            break;
-          case 2:
-            key = "openNote5th";
-            break;
-          case 3:
-            key = "openNote4th";
-            break;
-          case 4:
-            key = "openNote3rd";
-            break;
-          case 5:
-            key = "openNote2nd";
-            break;
-          case 6:
-            key = "openNote1st";
-            break;
-          }
-          transferTypeOfVar = ttOfVar[systemName[key]];
-          if (typeof valueValue2 == "string") {
-            value = convertNote(valueValue2);
-          } else {
-            value = valueValue2;
-          }
-          variables = convert(value,"num",transferTypeOfVar);
+        if (typeof valueValue2 == "string") {
+          value = convertNote(valueValue2);
+        } else {
+          value = valueValue2;
         }
-      } else if (Object.keys(value).length == 2 && key == "dPad") {
-        valueKey1 = Object.keys(value)[0];
-        valueKey2 = Object.keys(value)[1];
-        if (valueKey1 == "index" && valueKey2 == "value") {
-          valueValue1 = Object.values(value)[0];
-          valueValue2 = Object.values(value)[1];
-          variables = generateArrayWithChangeDPadTo(valueValue1,valueValue2);
-          transferTypeOfVar = "sttUInt32";
-        }
+        variables = convert(value,"num",transferTypeOfVar);
       }
-      break;
+    } else if (Object.keys(value).length == 2 && key == "dPad") {
+      valueKey1 = Object.keys(value)[0];
+      valueKey2 = Object.keys(value)[1];
+      if (valueKey1 == "index" && valueKey2 == "value") {
+        valueValue1 = Object.values(value)[0];
+        valueValue2 = Object.values(value)[1];
+        variables = generateArrayWithChangeDPadTo(valueValue1,valueValue2);
+        transferTypeOfVar = "sttUInt32";
+      }
     }
-    if (Array.isArray(variables) == false) {
-      variables = [variables];
-    }
+    break;
+  }
+  if (Array.isArray(variables) == false) {
+    variables = [variables];
+  }
 
-    //This code, which puts the message together, should eventually be cleaned up
-    if (key == "get" && systemName.hasOwnProperty(value) == false) {
-      command = cfr["SYSEX_GET_CONFIG_PARAM"];
-      commandSpecific = value.split("");
-      for (let p=0; p<commandSpecific.length; p++) {
-        commandSpecific[p] = commandSpecific[p].charCodeAt(0);
-      }
-      finalMessageSize = sysexStart.length
-        + jsVendorID.length
-        + 1
-        + commandSpecific.length
-        + 1
-        + 1; //because this doesn't include the size
-      finalMessage = finalMessage.concat(sysexStart,jsVendorID,command,commandSpecific,finalMessageSize,sysexEnd);
-    } else if (systemName.hasOwnProperty(value) == false) {
-      if (systemButtonNames.hasOwnProperty(valueValue1)) {
-        commandSpecific = systemButtonNames[valueValue1].split("");
-      } else {
-        commandSpecific = key.split("");
-      }
+  //This code, which puts the message together, should eventually be cleaned up
+  if (key == "get" && systemName.hasOwnProperty(value) == false) {
+    command = cfr["SYSEX_GET_CONFIG_PARAM"];
+    commandSpecific = value.split("");
+    for (let p=0; p<commandSpecific.length; p++) {
+      commandSpecific[p] = commandSpecific[p].charCodeAt(0);
+    }
+    finalMessageSize = sysexStart.length
+      + jsVendorID.length
+      + 1
+      + commandSpecific.length
+      + 1
+      + 1; //because this doesn't include the size
+    finalMessage = finalMessage.concat(sysexStart,jsVendorID,command,commandSpecific,finalMessageSize,sysexEnd);
+  } else if (systemName.hasOwnProperty(value) == false) {
+    if (systemButtonNames.hasOwnProperty(valueValue1)) {
+      commandSpecific = systemButtonNames[valueValue1].split("");
+    } else {
+      commandSpecific = key.split("");
+    }
+    command = cfr["SYSEX_SET_CONFIG_PARAM"];
+
+    for (let p=0; p<commandSpecific.length; p++) {
+      commandSpecific[p] = commandSpecific[p].charCodeAt(0);
+    }
+    finalMessageSize = sysexStart.length
+      + jsVendorID.length
+      + 1  //command
+      + commandSpecific.length
+      + 1  //stt byte
+      + variables.length
+      + 1  //sysex end
+      + 1; //because this doesn't include the size
+    finalMessage = finalMessage.concat(sysexStart,jsVendorID,command,commandSpecific,sttr[transferTypeOfVar],variables,finalMessageSize,sysexEnd);
+  }
+  if (key == "get" && systemName.hasOwnProperty(value)) {
+    command = cfr["SYSEX_GET_CONFIG_PARAM"];
+    commandSpecific = systemName[value].split("");
+    for (let p=0; p<commandSpecific.length; p++) {
+      commandSpecific[p] = commandSpecific[p].charCodeAt(0);
+    }
+    finalMessageSize = sysexStart.length
+      + jsVendorID.length
+      + 1
+      + commandSpecific.length
+      + 1
+      + 1; //because this doesn't include the size
+    finalMessage = finalMessage.concat(sysexStart,jsVendorID,command,commandSpecific,finalMessageSize,sysexEnd);
+  } else {
+    if (systemName.hasOwnProperty(key)) {
       command = cfr["SYSEX_SET_CONFIG_PARAM"];
-
+      commandSpecific = systemName[key].split("");
       for (let p=0; p<commandSpecific.length; p++) {
         commandSpecific[p] = commandSpecific[p].charCodeAt(0);
       }
@@ -1110,105 +1139,74 @@ export const jamstik = {
         + 1; //because this doesn't include the size
       finalMessage = finalMessage.concat(sysexStart,jsVendorID,command,commandSpecific,sttr[transferTypeOfVar],variables,finalMessageSize,sysexEnd);
     }
-    if (key == "get" && systemName.hasOwnProperty(value)) {
-      command = cfr["SYSEX_GET_CONFIG_PARAM"];
-      commandSpecific = systemName[value].split("");
-      for (let p=0; p<commandSpecific.length; p++) {
-        commandSpecific[p] = commandSpecific[p].charCodeAt(0);
-      }
-      finalMessageSize = sysexStart.length
-        + jsVendorID.length
-        + 1
-        + commandSpecific.length
-        + 1
-        + 1; //because this doesn't include the size
-      finalMessage = finalMessage.concat(sysexStart,jsVendorID,command,commandSpecific,finalMessageSize,sysexEnd);
-    } else {
-      if (systemName.hasOwnProperty(key)) {
-        command = cfr["SYSEX_SET_CONFIG_PARAM"];
-        commandSpecific = systemName[key].split("");
-        for (let p=0; p<commandSpecific.length; p++) {
-          commandSpecific[p] = commandSpecific[p].charCodeAt(0);
-        }
-        finalMessageSize = sysexStart.length
-          + jsVendorID.length
-          + 1  //command
-          + commandSpecific.length
-          + 1  //stt byte
-          + variables.length
-          + 1  //sysex end
-          + 1; //because this doesn't include the size
-        finalMessage = finalMessage.concat(sysexStart,jsVendorID,command,commandSpecific,sttr[transferTypeOfVar],variables,finalMessageSize,sysexEnd);
-      }
-    }
-    return(finalMessage);
-
-  },
-
-  deserialize: function(data) {
-    let finalMessage = {};
-    let arraySize = data.length - 4;
-    let message = new Array(arraySize);
-    for (let w = 0; w<message.length; w++) {
-      message[w]=data[w+4];
-    }
-    let beginVar = 10;
-
-    let command = message.slice(1,9);
-    let joinedCommand = String.fromCharCode(command[0],
-                                            command[1],
-                                            command[2],
-                                            command[3],
-                                            command[4],
-                                            command[5],
-                                            command[6],
-                                            command[7]);
-    let variablePart = message.slice(beginVar,message.length-2);
-
-    switch (cf[message[0]]) {
-    case "SYSEX_GET_CONFIG_SCHEMA":
-    case "SYSEX_ACK_GET_ALL_CONFIG":
-      beginVar=1;
-      variablePart = message.slice(beginVar,message.length-2);
-      break;
-    case "SYSEX_INTERNAL_ERROR":
-    case "SYSEX_ACK_GET_CONFIG_PARAM":
-    case "SYSEX_ACK_SET_CONFIG_PARAM":
-    case "SYSEX_ACK_LIST_CC":
-    case "SYSEX_ACK_LIST_CATEGORIES":
-      //special string tuning by index
-      if (command[0] == 0x53 &&
-          command[2] == 0x5F &&
-          command[3] == 0x5F &&
-          command[4] == 0x4E &&
-          command[5] == 0x4F &&
-          command[6] == 0x54 &&
-          command[7] == 0x45) {
-        finalMessage["string"]={index:-47-parseInt(command[1])*-1, value: convert(variablePart,ttOfVar[joinedCommand])};
-        return(finalMessage);
-      } else if (command[0] == 68 &&
-                 command[1] == 80 &&
-                 command[2] == 65 &&
-                 command[3] == 68 &&
-                 command[4] == 79 &&
-                 command[5] == 80) {
-        finalMessage["dPad"] = whichDPadAndTypeOfDPadAssignment(variablePart);
-        return(finalMessage);
-      }
-      if (systemNameR.hasOwnProperty(joinedCommand)) {
-        finalMessage[systemNameR[joinedCommand]] = convert(variablePart,ttOfVar[joinedCommand]);
-      } else {
-        finalMessage[joinedCommand] = convert(variablePart,ttOfVar[joinedCommand]);
-      }
-      return (finalMessage);
-      break;
-      //firmware updates
-    case "SYSEX_GET_FIRMWARE_BLOCK":
-    case "SYSEX_FW_UPDATE_FINISHED":
-    case "SYSEX_GET_FIRMWARE_BLOCK_COMPRESSED_V1":
-    case "SYSEX_GET_FIRMWARE_BLOCK_COMPRESSED_V2":
-      break;
-    }
-    return 0;
   }
-};
+  return(finalMessage);
+
+}
+
+export function deserialize(data) {
+  let finalMessage = {};
+  let arraySize = data.length - 4;
+  let message = new Array(arraySize);
+  for (let w = 0; w<message.length; w++) {
+    message[w]=data[w+4];
+  }
+  let beginVar = 10;
+
+  let command = message.slice(1,9);
+  let joinedCommand = String.fromCharCode(command[0],
+                                          command[1],
+                                          command[2],
+                                          command[3],
+                                          command[4],
+                                          command[5],
+                                          command[6],
+                                          command[7]);
+  let variablePart = message.slice(beginVar,message.length-2);
+
+  switch (cf[message[0]]) {
+  case "SYSEX_GET_CONFIG_SCHEMA":
+  case "SYSEX_ACK_GET_ALL_CONFIG":
+    beginVar=1;
+    variablePart = message.slice(beginVar,message.length-2);
+    break;
+  case "SYSEX_INTERNAL_ERROR":
+  case "SYSEX_ACK_GET_CONFIG_PARAM":
+  case "SYSEX_ACK_SET_CONFIG_PARAM":
+  case "SYSEX_ACK_LIST_CC":
+  case "SYSEX_ACK_LIST_CATEGORIES":
+    //special string tuning by index
+    if (command[0] == 0x53 &&
+        command[2] == 0x5F &&
+        command[3] == 0x5F &&
+        command[4] == 0x4E &&
+        command[5] == 0x4F &&
+        command[6] == 0x54 &&
+        command[7] == 0x45) {
+      finalMessage["string"]={index:-47-parseInt(command[1])*-1, value: convert(variablePart,ttOfVar[joinedCommand])};
+      return(finalMessage);
+    } else if (command[0] == 68 &&
+               command[1] == 80 &&
+               command[2] == 65 &&
+               command[3] == 68 &&
+               command[4] == 79 &&
+               command[5] == 80) {
+      finalMessage["dPad"] = whichDPadAndTypeOfDPadAssignment(variablePart);
+      return(finalMessage);
+    }
+    if (systemNameR.hasOwnProperty(joinedCommand)) {
+      finalMessage[systemNameR[joinedCommand]] = convert(variablePart,ttOfVar[joinedCommand]);
+    } else {
+      finalMessage[joinedCommand] = convert(variablePart,ttOfVar[joinedCommand]);
+    }
+    return (finalMessage);
+    break;
+    //firmware updates
+  case "SYSEX_GET_FIRMWARE_BLOCK":
+  case "SYSEX_FW_UPDATE_FINISHED":
+  case "SYSEX_GET_FIRMWARE_BLOCK_COMPRESSED_V1":
+  case "SYSEX_GET_FIRMWARE_BLOCK_COMPRESSED_V2":
+    break;
+  }
+  return 0;
+}

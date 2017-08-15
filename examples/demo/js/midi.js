@@ -2,7 +2,8 @@
   midi.js
 */
 
-import {jamstik} from '/dist/jamstik';
+import {serialize} from '/dist/jamstik';
+import {deserialize} from '/dist/jamstik';
 
 //midi object
 let midi;
