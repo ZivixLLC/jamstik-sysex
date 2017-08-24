@@ -205,11 +205,9 @@ panic
 | firmwareRevisionMinor | retrieve only |
 | leftHanded | boolean |
 | tutorMode | boolean |
-| 
 | hardwareCapabilityFlags |  |
 | batteryPercent | retrieve only |
 | resetDefaults | 0-4 |
-| 
 | midpointX (string num) | 0-127 |
 | triggerEnvMaxX | 0-127 |
 |  volumeEnvMaxX | 0-127 |
