@@ -4,6 +4,14 @@ Use this simple API to serialize and deserialize special MIDI messages to be rec
 
 Coupled with [Web MIDI API](https://webaudio.github.io/web-midi-api/), you can create software which changes the exclusive parameters in the Jamstik, like tuning or D-pad functionality.
 
+## Standard MIDI Messages (AKA not SysEx)
+
+The Jamstik is a class-compliant MIDI controller. So, the majority of your initial steps of developing a Jamstik application involves reading standard note ons/note offs etc. For information on some of the specific Jamstik MIDI messages, refer to [this PDF](https://github.com/ZivixLLC/jamstik-sysex/blob/master/jamstik-standard-midi-implementation.pdf). A noteworthy feature of the Jamstik is reading fret messages.
+
+### What if I don't use web technologies?
+
+You can still use the Standard MIDI Messages as listed above. Core MIDI, for example, is how the iOS Jamstik apps talk to the Jamstik. There is currently no public API for non-Javascript Jamstik SysEx messages.
+
 ## Installation
 
 Place ```dist/jamstik.js``` in your project directory or download through ```npm```
