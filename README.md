@@ -4,7 +4,7 @@ Use this simple API to serialize and deserialize special MIDI messages to be rec
 
 Coupled with [Web MIDI API](https://webaudio.github.io/web-midi-api/), you can create software which changes the exclusive parameters in the Jamstik, like tuning or D-pad functionality.
 
-## Standard MIDI Messages (AKA not SysEx)
+## Important info regarding Standard MIDI Messages (AKA not SysEx)
 
 The Jamstik is a class-compliant MIDI controller. So, the majority of your initial steps of developing a Jamstik application involves reading standard note ons/note offs etc. For information on some of the specific Jamstik MIDI messages, refer to [this PDF](https://github.com/ZivixLLC/jamstik-sysex/blob/master/jamstik-standard-midi-implementation.pdf). A noteworthy feature of the Jamstik is reading fret messages.
 
