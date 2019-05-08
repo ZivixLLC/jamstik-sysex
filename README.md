@@ -12,7 +12,7 @@ The Jamstik is a class-compliant MIDI controller. So, the majority of your initi
 
 You can still use the Standard MIDI Messages as listed above. Core MIDI, for example, is how the iOS Jamstik apps talk to the Jamstik. There is currently no public API for non-Javascript Jamstik SysEx messages.
 
-## Installation
+## Sysex API Installation
 
 Place ```dist/jamstik.js``` in your project directory or download through ```npm```
 
