@@ -53,10 +53,10 @@ jamstik.serialize({transpose: 5});
 jamstik.serialize({tapMode: true});
 
 //Retrieve the current transposition
-jamstik.serialize({get: transpose});
+jamstik.serialize({get: "transpose"});
 
 //Retrieve current battery percentage
-jamstik.serialize({get: batteryPercent});
+jamstik.serialize({get: "batteryPercent"});
 
 //Set Jamstik to standard tuning (EADGBe)
 jamstik.serialize({string: {index: 1, value: 'E2'}});
