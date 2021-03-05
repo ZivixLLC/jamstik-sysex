@@ -14,11 +14,8 @@ You can still use the Standard MIDI Messages as listed above. Core MIDI, for exa
 
 ## SysEx API Installation
 
-Place ```dist/jamstik.js``` in your project directory or download through ```npm```
+Place ```dist/jamstik.js``` in your project directory
 
-```bash
-npm install jamstik-sysex
-```
 ## Usage
 
 If using Web MIDI API, you must set ```sysex: true``` when requesting access.
