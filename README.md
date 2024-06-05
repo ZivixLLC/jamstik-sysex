@@ -14,7 +14,7 @@ You can still use the Standard MIDI Messages as listed above. Core MIDI, for exa
 
 ## SysEx API Installation
 
-Place ```dist/jamstik.js``` in your project directory
+Place ```js/jamstik.js``` in your project directory
 
 ## Usage
 

@@ -1,7 +1,6 @@
 /*
   jamstik.js
 */
-
 let dPadWords = [];
 for (let i = 0; i < 13; i++) {
   dPadWords.push("up", "down", "left", "right", "enter", "mute");
@@ -366,7 +365,7 @@ function whichDPadAndTypeOfDPadAssignment(arrayVariables) {
   let whichDPad;
   let typeOfAssignment;
   let finalObject = {};
-  console.log("it was a dpad message", arrayVariables);
+  //console.log("it was a dpad message", arrayVariables.map((b) => b.toString(10)));
 
   for (
     let i = 0;
@@ -384,31 +383,36 @@ function whichDPadAndTypeOfDPadAssignment(arrayVariables) {
         arrayVariables.length == 5 ? dPadAssignments[i] : dPadAssignments7[i];
     }
   }
+  if (typeof whichDPad == "undefined") {
+  }
+
   //console.log("whichDPad is",whichDPad);
   //finalObject[whichDPad] = typeOfAssignment;
-  finalObject = { index: whichDPad, value: typeOfAssignment };
+  const key = `dpad${whichDPad}`;
+  finalObject = { [key]: typeOfAssignment };
   return finalObject;
 }
 
 function generateArrayWithChangeDPadTo(index, value, typeOfJamstik) {
   switch (typeOfJamstik) {
     case "dPad7":
-      console.log(
-        "dpad7 things",
-        dPadValues7[8 * dPadValueNum[value] + dPadIndex[index]]
-      );
+      // console.log(
+      //   "dpad7 things",
+      //   dPadValues7[8 * dPadValueNum[value] + dPadIndex[index]]
+      // );
       return dPadValues7[8 * dPadValueNum[value] + dPadIndex[index]];
       break;
     case "dPad":
     default:
-      console.log("dpad + things");
+      //console.log("dpad + things");
       return dPadValues[6 * dPadValueNum[value] + dPadIndex[index]];
       break;
   }
 }
 
 const systemNameR = {
-  SLEEPTIM: "sleepTime",
+  SLEEPTIM: "sleepTimeWireless",
+  SLEEPCON: "sleepTimeWired",
   SINGLECH: "singleMidiChannelMode",
   MIDICHAN: "midiChannelOf1stString",
   MIN__VEL: "minimumMidiVelocity",
@@ -522,10 +526,18 @@ const systemNameR = {
   EXPRESSN: "expressionSend",
   PITCHBEN: "pitchBendSend",
   BLE_ENAB: "bluetoothEnable",
-  BLE_NAME: "bluetoothName",
+  BLE_NAME: "bluetoothNameFull",
   LEDBRITE: "ledBrightness",
   PTCHBSEM: "pitchBendRange",
   NUMSTRGS: "numberOfStrings",
+  TRANSCRI: "transcriptionMode",
+  STRENVCC: "stringEnvelopeController",
+  STRENVDS: "stringEnvelopeDestination",
+  PROFILE_: "profile",
+  DEMO__EN: "demoModeEnable",
+  DEMO_TIM: "demoModeResetTimer",
+  DEMO_PRF: "demoModeProfile",
+  MPE_MODE: "mpeMode",
 
   NUMFRETS: "numberOfFrets",
   HAMMERMV: "hammerOnSensitivity",
@@ -535,14 +547,29 @@ const systemNameR = {
   DEMOMODE: "demoMode",
   //GT only. There's probably more of this somewhere
   FRTBOUNC: "fretDebounce",
+  MAC_ADDR: "MACAddress",
+  BLENAME1: "bluetoothNameFirstHalf",
+  BLENAME0: "bluetoothNameSecondHalf",
   //
+  MUTEENAB: "enableStringMute",
+  MUTETHRS: "muteThreshold",
   BATTDIAG: "batteryDiagnostics",
   CONNSTAT: "connectionStatus",
   STRGSENS: "stringSensitivity",
+  MINTRIGT: "doubleStrumTimer",
 
   //testing
-  GENSYSEX: "generateSysex"
+  GENSYSEX: "generateSysex",
 };
+const numOfStrings = 6;
+const numOfFrets = 7;
+for (let i = 0; i < numOfStrings; i++) {
+  for (let j = 0; j < numOfFrets; j++) {
+    systemNameR[`SIG_S${i}F${j}`] = `signalStrengthOfString${i}Fret${j}`;
+    systemNameR[`SEN_S${i}F${j}`] = `bluetoothSensitivityOfString${i}Fret${j}`;
+    systemNameR[`SEN1S${i}F${j}`] = `usbSensitivityOfString${i}Fret${j}`;
+  }
+}
 
 const systemName = {};
 for (let key in systemNameR) {
@@ -628,6 +655,7 @@ for (let key2 in ttr) {
 //transfer type of variable
 const ttOfVar = {
   SLEEPTIM: "sttUInt32",
+  SLEEPCON: "sttUInt32",
   SINGLECH: "stt7bitByte",
   MIDICHAN: "stt8bitByte",
   MIN__VEL: "stt8bitByte",
@@ -636,8 +664,8 @@ const ttOfVar = {
   ACCCONTR: "stt7bitByte",
   ACCTHRES: "stt7bitByte",
   ACCEL_ON: "stt7bitByte",
-  ACC_MINA: "sttSInt16",
-  ACC_MAXA: "sttSInt16",
+  ACC_MINA: "sttSInt32",
+  ACC_MAXA: "sttSInt32",
   STR_HOLD: "stt8bitByte",
   LOGCURVE: "stt7bitByte",
   CURVFLAT: "stt8bitByte",
@@ -648,7 +676,7 @@ const ttOfVar = {
   HAMMERTM: "stt8bitByte",
   HOTVELEN: "stt7bitByte",
   TAP_MODE: "stt7bitByte",
-  TRANSPSE: "sttSInt16",
+  TRANSPSE: "sttSInt32",
   S0__NOTE: "stt7bitByte",
   S1__NOTE: "stt7bitByte",
   S2__NOTE: "stt7bitByte",
@@ -737,8 +765,15 @@ const ttOfVar = {
   FACTTEST: "stt7bitByte",
   EXPRESSN: "stt7bitByte",
   PITCHBEN: "stt7bitByte",
+  BLE_NAME: "sttUInt64",
+  BLENAME1: "sttUInt32",
+  BLENAME0: "sttUInt32",
   BLE_ENAB: "stt7bitByte",
-  PTCHBSEM: "sttSInt16",
+  PTCHBSEM: "sttSInt32",
+  TRANSCRI: "stt7bitByte",
+  STRENVDS: "sttSInt32",
+  STRENVCC: "sttSInt32",
+  MPE_MODE: "sttSInt32",
 
   NUMFRETS: "stt8bitByte",
   HAMMERMV: "stt8bitByte",
@@ -749,8 +784,25 @@ const ttOfVar = {
   FRTBOUNC: "stt7bitByte",
   CONNSTAT: "stt7bitByte", //need to verify
 
-  GENSYSEX: "sttUInt32"
+  MUTEENAB: "stt7bitByte",
+  MUTETHRS: "stt7bitByte",
+
+  MINTRIGT: "sttUInt16",
+
+  
+  GENSYSEX: "sttUInt32",
+  PROFILE_: "sttSInt32",
+  DEMO__EN: "sttSInt32",
+  DEMO_TIM: "sttSInt32",
+  DEMO_PRF: "sttSInt32",
 };
+for (let i = 0; i < numOfStrings; i++) {
+  for (let j = 0; j < numOfFrets; j++) {
+    ttOfVar[`SIG_S${i}F${j}`] = "sttSInt16";
+    ttOfVar[`SEN_S${i}F${j}`] = `sttSInt16`;
+    ttOfVar[`SEN1S${i}F${j}`] = `sttSInt16`;
+  }
+}
 
 let recommendedVarUse = {
   SLEEPTIM: "dropdown",
@@ -858,6 +910,12 @@ let recommendedVarUse = {
   FSENSITI: "textBox",
 };
 
+function isString(obj) {
+  return Object.prototype.toString.call(obj) === "[object String]";
+}
+
+//Array can actually be a string too!
+// In the case of serializing 64 bit
 function convert(numberOrArray, type, convertTo) {
   //supplying a convertTo argument is optional if going TO a number
   //if you want to be redundant you can just supply converTo as equal to "num"
@@ -878,6 +936,8 @@ function convert(numberOrArray, type, convertTo) {
     typeOfConversion = type;
     //use convert to in switch statement
   }
+  const argumentIsString = isString(numberOrArray);
+  const argumentAsString = argumentIsString ? numberOrArray : "";
 
   let num1;
   let num2;
@@ -938,50 +998,56 @@ function convert(numberOrArray, type, convertTo) {
         return finalNumber;
       }
       break;
-    
-      case 'sttUInt32':
-        //DOES THIS WORK?
-        case 'sttSInt32':
-          //serializing
-          if (typeof initialNumber != 'undefined') {
-              var numbers7bit = [0, 0, 0, 0, 0];
-    
-              // grab least significant 4 bits and sll 3
-              numbers7bit[4] = (initialNumber & 0x0f) << 3;
-    
-              var kernel = 0x7f << 4;
-              var shift = 4;
-              for (var i = 3; i >= 0; i--) {
-                  numbers7bit[i] = (initialNumber & kernel) >>> shift;
-                  kernel = kernel << 7;
-                  shift += 7;
-              }
-    
-              finalArray = finalArray.concat(numbers7bit[0], numbers7bit[1], numbers7bit[2], numbers7bit[3], numbers7bit[4]);
-            return finalArray;
-    
-            //deserializing
-          } else {
-              var numbers8bit = [0, 0, 0, 0];
-              var shift = 3;
-              for (var i = 4; i >= 0; i--) {
-                  if (i != 0)
-                      numbers8bit[i - 1] |= initialArray[i] >>> shift;
-                  if (i != 4)
-                      numbers8bit[i] |= (initialArray[i] << (8 - shift)) & 0xff;
-                  shift++;
-              }
-    
-              var final = 0;
-              shift = 24;
-              for (i = 0; i < 4; i++) {
-                  final |= numbers8bit[i] << shift;
-                  shift -= 8;
-              }
-    
-              return final;
-          }
-          break;
+
+    case "sttUInt32":
+    //DOES THIS WORK?
+    case "sttSInt32":
+      //serializing
+      if (typeof initialNumber != "undefined") {
+        var numbers7bit = [0, 0, 0, 0, 0];
+
+        // grab least significant 4 bits and sll 3
+        numbers7bit[4] = (initialNumber & 0x0f) << 3;
+
+        var kernel = 0x7f << 4;
+        var shift = 4;
+        for (var i = 3; i >= 0; i--) {
+          numbers7bit[i] = (initialNumber & kernel) >>> shift;
+          kernel = kernel << 7;
+          shift += 7;
+        }
+
+        finalArray = finalArray.concat(
+          numbers7bit[0],
+          numbers7bit[1],
+          numbers7bit[2],
+          numbers7bit[3],
+          numbers7bit[4]
+        );
+        return finalArray;
+
+        //deserializing
+      } else {
+        var numbers8bit = [0, 0, 0, 0];
+        var shift = 3;
+        for (var i = 4; i >= 0; i--) {
+          if (i != 0) numbers8bit[i - 1] |= initialArray[i] >>> shift;
+          if (i != 4) numbers8bit[i] |= (initialArray[i] << (8 - shift)) & 0xff;
+          shift++;
+        }
+
+        var final = 0;
+        shift = 24;
+        for (i = 0; i < 4; i++) {
+          final |= numbers8bit[i] << shift;
+          shift -= 8;
+        }
+
+        if (typeOfConversion == "sttUInt32") final = final >>> 0; // force javascript to interpret this data as unsigned
+
+        return final;
+      }
+      break;
     case "stt7bitASCII":
     case "stt8bitASCII":
       break;
@@ -1129,31 +1195,45 @@ function convert(numberOrArray, type, convertTo) {
       break;
     case "sttUInt64":
     case "sttSInt64":
-      function dec2bin(dec) {
-        const string = (dec >>> 0).toString(2).padStart(7, "0");
-        return string;
+      //deserializing
+      if (!argumentIsString) {
+        function dec2bin(dec) {
+          const string = (dec >>> 0).toString(2).padStart(7, "0");
+          return string;
+        }
+        let finalBinArray;
+        const finalBinString = initialArray.map((ia) => dec2bin(ia)).join("");
+        //SPLIT BY 7 BITS
+        //console.log("finalbin", finalBinString);
+        finalBinArray = finalBinString.match(/.{1,8}/g);
+        //CONVERT 7 BIT BINARY STRING THINGS TO ACTUAL DECIMAL NUMBERS
+        for (let i = 0; i < finalBinArray.length; i++) {
+          finalBinArray[i] = parseInt(finalBinArray[i], 2);
+        }
+        finalBinArray = finalBinArray
+          .map((b) => b.toString(16).padStart(2, 0))
+          .join("")
+          .toUpperCase();
+        return finalBinArray.slice(0, finalBinArray.length - 2);
       }
-
-      let finalBinArray;
-      const finalBinString = initialArray.map((ia) => dec2bin(ia)).join("");
-      //SPLIT BY 7 BITS
-      console.log("finalbin", finalBinString);
-      finalBinArray = finalBinString.match(/.{1,8}/g);
-      //CONVERT 7 BIT BINARY STRING THINGS TO ACTUAL DECIMAL NUMBERS
-      for (let i = 0; i < finalBinArray.length; i++) {
-        finalBinArray[i] = parseInt(finalBinArray[i], 2);
+      //serializing
+      else {
+        //currently this code is only used for naming jamstiks
+        //therefore i do the ascii conversion here
+        //maybe it needs to be exactly 8 characters? not sure
+        const argumentAsArray = [...argumentAsString];
+        const asciiNumbers = argumentAsArray.map((letter) =>
+          letter.charCodeAt(0)
+        );
+        //console.log("argumentAsArray:", argumentAsArray, "asciiNumbers:",asciiNumbers)
+        return asciiNumbers;
       }
-      finalBinArray = finalBinArray
-        .map((b) => b.toString(16).padStart(2, 0))
-        .join("")
-        .toUpperCase();
-      return finalBinArray.slice(0, finalBinArray.length - 2);
       break;
     case "JSON":
       const jsonStringOfMessage = `{${numberOrArray
         .map((num) => String.fromCharCode(num))
         .join("")}`;
-      console.log("Here is the things:", jsonStringOfMessage);
+      //console.log("Here is the things:", jsonStringOfMessage);
       return JSON.parse(jsonStringOfMessage);
     case "stayTheSame":
     default:
@@ -1222,7 +1302,7 @@ function convertNote(note) {
   return conversion;
 }
 
-export function serialize(initialMessage) {
+function serialize(initialMessage) {
   if (typeof initialMessage != "object") {
     throw "serialize(): argument must be of type object.";
   }
@@ -1257,39 +1337,13 @@ export function serialize(initialMessage) {
 
   if (key == "get" && value == "allConfig") {
     return [
-      0xf0,
-      0x0,
-      0x2,
-      0x2,
-      0x66,
-      0x0,
-      0x0,
-      0x0,
-      0x0,
-      0x0,
-      0x0,
-      0x0,
-      0x0,
-      0x55,
+      0xf0, 0x0, 0x2, 0x2, 0x66, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x55,
       0xf7,
     ];
   }
   if (key == "get" && value == "allConfigSchema") {
     return [
-      0xf0,
-      0x0,
-      0x2,
-      0x2,
-      0x44,
-      0x0,
-      0x0,
-      0x0,
-      0x0,
-      0x0,
-      0x0,
-      0x0,
-      0x0,
-      0x55,
+      0xf0, 0x0, 0x2, 0x2, 0x44, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x55,
       0xf7,
     ];
   }
@@ -1319,11 +1373,15 @@ export function serialize(initialMessage) {
       }
       break;
     case "string":
+      //i commented this out because i don't think i ever send e4, a4, d, g, b, e etc
+      /*
       if (key != "get") {
         //put in conversions for like 'D5' and stuff
         value = convertNote(value);
       } else {
       }
+      */
+
       break;
     case "object":
       if (Object.keys(value).length == 2 && key == "string") {
@@ -1494,12 +1552,14 @@ export function serialize(initialMessage) {
   );
 
   if (fZeroDiagnostics.occurances > 1) {
-    return finalMessage.slice(fZeroDiagnostics.index, finalMessage.length);
+    return JSON.stringify(
+      finalMessage.slice(fZeroDiagnostics.index, finalMessage.length)
+    );
   }
-  return finalMessage;
+  return JSON.stringify(finalMessage);
 }
 
-export function deserialize(data) {
+function deserialize(data) {
   //console.log("deserialize was called", data);
   let finalMessage = {};
   let arraySize = data.length - 4;
@@ -1536,7 +1596,8 @@ export function deserialize(data) {
     case "SYSEX_ACK_SET_CONFIG_PARAM":
     case "SYSEX_ACK_GET_CONFIG_SCHEMA":
     case "SYSEX_ACK_LIST_CC":
-      //special string tuning by index
+      /*
+//special string tuning by index
       if (
         command[0] == 0x53 &&
         command[2] == 0x5f &&
@@ -1546,12 +1607,13 @@ export function deserialize(data) {
         command[6] == 0x54 &&
         command[7] == 0x45
       ) {
-        finalMessage["string"] = {
-          index: -47 - parseInt(command[1]) * -1,
-          value: convert(variablePart, ttOfVar[joinedCommand]),
-        };
-        return finalMessage;
-      } else if (
+        finalMessage[`string${-47 - parseInt(command[1]) * -1 - 1}`] = 
+        convert(variablePart, ttOfVar[joinedCommand]);
+        return JSON.stringify(finalMessage);
+      } else 
+    */
+
+      if (
         command[0] == 68 &&
         command[1] == 80 &&
         command[2] == 65 &&
@@ -1559,8 +1621,9 @@ export function deserialize(data) {
         command[4] == 79 &&
         command[5] == 80
       ) {
-        finalMessage["dPad"] = whichDPadAndTypeOfDPadAssignment(variablePart);
-        return finalMessage;
+        //console.log("joined command:", joinedCommand)
+        finalMessage = whichDPadAndTypeOfDPadAssignment(variablePart);
+        return JSON.stringify(finalMessage);
       }
       if (systemNameR.hasOwnProperty(joinedCommand)) {
         finalMessage[systemNameR[joinedCommand]] = convert(
@@ -1578,13 +1641,13 @@ export function deserialize(data) {
             : stt[data[indexOfTransferType]]
         );
       }
-      return finalMessage;
+      return JSON.stringify(finalMessage);
       break;
     case "SYSEX_ACK_LIST_CATEGORIES":
-      console.log("variable part is", String.fromCharCode(...variablePart));
-      return {
+      //console.log("variable part is", String.fromCharCode(...variablePart));
+      return JSON.stringify({
         categoryNames: String.fromCharCode(...variablePart).match(/.{1,9}/g),
-      };
+      });
     //firmware updates
     case "SYSEX_GET_FIRMWARE_BLOCK":
     case "SYSEX_FW_UPDATE_FINISHED":
